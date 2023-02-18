@@ -1,0 +1,26 @@
+{
+  "name": "open-in-browser",
+  "displayName": "Open in Browser",
+  "description": "Opens the current repository's remote URL in Browser",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:open-in-browser.openRemoteURLInBrowser"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "open-in-browser.openRemoteURLInBrowser",
+        "title": "Open Remote URL in Browser"
+      }
+    ]
+  },
+  "scripts": {
+  }
+}
