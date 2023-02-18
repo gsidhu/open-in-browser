@@ -1,7 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
-const { exec } = require('child_process');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -20,38 +21,48 @@ function activate(context) {
 	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('open-in-browser.openRemoteURLInBrowser', function () {
 		// The code you place here will be executed every time your command is executed
-		const fetchCommand = "git remote -v | grep fetch | awk '{print $2}'";
-		const pushCommand = "git remote -v | grep push | awk '{print $2}'";
-		let fetchURL = '';
-		let pushURL = '';
-		exec(fetchCommand, (err, stdout, stderr) => {
-			if (err) {
-				// node couldn't execute the command
-				// Display a message box to the user
-				vscode.window.showInformationMessage("Oops. Something went wrong. Please try again later.");
-				return;
-			}
-			fetchURL = stdout;
+		// get fetch URL from git remote -v
+		let fetchURL, pushURL = '';
+		getFetchURL().then((url) => {
+			fetchURL = url;
 		});
-		exec(pushCommand, (err, stdout, stderr) => {
-			if (err) {
-				// node couldn't execute the command
-				// Display a message box to the user
-				vscode.window.showInformationMessage("Oops. Something went wrong. Please try again later.");
-				return;
-			}
-			pushURL = stdout;
-		});
+		// getPushURL().then((url) => {
+		// 	pushURL = url;
+		// });
 
-		// show options to user
-		vscode.window.showQuickPick([fetchURL, pushURL], { placeHolder: "Select a URL to open in browser" }).then((url) => {
-			if (url) {
-				vscode.env.openExternal(vscode.Uri.parse(url));
+		// // show options to user
+		vscode.window.showQuickPick(['(Default Browser)', 'Arc', 'Firefox', 'Google Chrome', 'Safari']).then((option) => {
+			if (option === 'Default') {
+				// open fetch URL in default browser
+				vscode.env.openExternal(vscode.Uri.parse(fetchURL));
+			} else {
+				// open fetch URL in the chosen browser
+				exec("open -a '" + option + "' " + fetchURL);
 			}
 		});
 	});
 
 	context.subscriptions.push(disposable);
+}
+
+async function getFetchURL() {
+	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
+	const { stdout, stderr } = await exec("cd " + currentPath + " && git remote -v | grep fetch | awk '{print $2}'");
+  if (stderr) {
+		vscode.window.showInformationMessage(stderr.toString());
+		return stderr;
+	}
+	return stdout.trim();
+}
+
+async function getPushURL() {
+	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
+	const { stdout, stderr } = await exec("cd " + currentPath + " && git remote -v | grep push | awk '{print $2}'");
+  if (stderr) {
+		vscode.window.showInformationMessage(stderr.toString());
+		return stderr;
+	}
+	return stdout.trim();
 }
 
 // This method is called when your extension is deactivated

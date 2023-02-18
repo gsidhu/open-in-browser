@@ -1,5 +1,5 @@
 # Open in Browser
-Opens the current Git repository's remote URL in your default browser.
+Opens the current Git repository's remote URL in a browser.
 
 ## Usage
 1. Run `Open Remote URL in Browser` from the Command Palette.

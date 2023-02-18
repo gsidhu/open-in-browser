@@ -3,15 +3,14 @@
   "displayName": "Open in Browser",
   "description": "Opens the current repository's remote URL in Browser",
   "version": "0.0.1",
+  "repository": "https://github.com/gsidhu/vscode-ext-open-in-browser",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:open-in-browser.openRemoteURLInBrowser"
-  ],
+  "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
     "commands": [
@@ -21,6 +20,8 @@
       }
     ]
   },
-  "scripts": {
+  "scripts": {},
+  "devDependencies": {
+    "@types/vscode": "^1.75.1"
   }
 }
