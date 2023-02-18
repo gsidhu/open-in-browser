@@ -15,6 +15,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "open-in-browser.openOriginRemoteFetchURLInBrowser",
+        "title": "Quickly Open Remote URL in Browser"
+      },
+      {
         "command": "open-in-browser.openRemoteFetchURLInBrowser",
         "title": "Open Remote Fetch URL in Browser"
       },

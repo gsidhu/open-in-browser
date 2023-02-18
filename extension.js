@@ -7,6 +7,14 @@ const exec = util.promisify(require('child_process').exec);
  */
 function activate(context) {
 	// Remote Fetch URL
+	let disposableQuick = vscode.commands.registerCommand('open-in-browser.openOriginRemoteFetchURLInBrowser', function () {
+		// get fetch URL for the origin remote
+		getFetchURL('origin').then((url) => {
+			showBrowserOptions(url);
+		});
+	});
+
+	// Remote Fetch URL
 	let disposableFetch = vscode.commands.registerCommand('open-in-browser.openRemoteFetchURLInBrowser', function () {
 		// get all remotes for the current repository
 		getAllRemotes().then((result) => {
@@ -34,6 +42,7 @@ function activate(context) {
 		});
 	});
 
+	context.subscriptions.push(disposableQuick);
 	context.subscriptions.push(disposableFetch);
 	context.subscriptions.push(disposablePush);
 }
