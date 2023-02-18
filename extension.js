@@ -21,28 +21,51 @@ function activate(context) {
 	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('open-in-browser.openRemoteURLInBrowser', function () {
 		// The code you place here will be executed every time your command is executed
-		// get fetch URL from git remote -v
-		let fetchURL, pushURL = '';
-		getFetchURL().then((url) => {
-			fetchURL = url;
-		});
-		// getPushURL().then((url) => {
-		// 	pushURL = url;
-		// });
 
-		// // show options to user
-		vscode.window.showQuickPick(['(Default Browser)', 'Arc', 'Firefox', 'Google Chrome', 'Safari']).then((option) => {
-			if (option === 'Default') {
-				// open fetch URL in default browser
-				vscode.env.openExternal(vscode.Uri.parse(fetchURL));
-			} else {
-				// open fetch URL in the chosen browser
-				exec("open -a '" + option + "' " + fetchURL);
-			}
+		// get all remotes for the current repo
+		let remoteNames, fetchURL, pushURL = '';
+		getAllRemotes().then((remotes) => {
+			remoteNames = remotes;
+			console.log(remotes);
 		});
+
+		// // get fetch URL from git remote -v
+		// getFetchURL().then((url) => {
+		// 	fetchURL = url;
+		// });
+		// // getPushURL().then((url) => {
+		// // 	pushURL = url;
+		// // });
+
+		// // // show options to user
+		// vscode.window.showQuickPick(['(Default Browser)', 'Arc', 'Firefox', 'Google Chrome', 'Safari']).then((option) => {
+		// 	if (option === 'Default') {
+		// 		// open fetch URL in default browser
+		// 		vscode.env.openExternal(vscode.Uri.parse(fetchURL));
+		// 	} else {
+		// 		// open fetch URL in the chosen browser
+		// 		exec("open -a '" + option + "' " + fetchURL);
+		// 	}
+		// });
 	});
 
 	context.subscriptions.push(disposable);
+}
+
+async function getAllRemotes() {
+	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
+	const { stdout, stderr } = await exec("cd " + currentPath + " && git remote | wc -l | awk '{print $1}'");
+	const numRemotes = stdout;
+	let remoteNames = [];
+	for (let i = 0; i < parseInt(numRemotes); i++) {
+		const { stdout, stderr } = await exec("cd " + currentPath + " && git remote | awk '{print $" + i + "}'");
+		remoteNames.push(stdout);
+	}
+	if (stderr) {
+		vscode.window.showInformationMessage(stderr.toString());
+		return stderr;
+	}
+	return remoteNames;
 }
 
 async function getFetchURL() {
