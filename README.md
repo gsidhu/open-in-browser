@@ -2,7 +2,7 @@
 A VSCode extension that opens the current Git repository's remote URL in a browser.
 
 ## Installation
-1. Download the latest release from the [releases page](/releases/latest).
+1. Download the latest release from the [releases page](./releases/latest).
 2. Open the **Extensions** sidebar in VS Code. `View → Extensions`.
 3. Click on the **...** menu in the top-right corner of the **Extensions** sidebar and select **Install from VSIX...**.
 4. Select the downloaded VSIX file. Done!
@@ -30,7 +30,7 @@ Selecting a remote will present a list of browser options to choose from.
 Selecting a browser will open the remote URL in the selected browser.
 
 ## CHANGELOG
-1. [1.0.0](/releases/tag/v1.0.0) - Initial release
+1. [1.0.0](./releases/tag/v1.0.0) - Initial release
 
 ## ROADMAP & CONTRIBUTING
 To me, this extension is already feature-complete. 
@@ -40,4 +40,4 @@ But GitHub Co-Pilot seems to think that I should add support for opening the cur
 I'm very likely not going to do any of this. But if you want to, feel free to make a pull request or open an issue.
 
 ## LICENSE
-[GNU General Public License v3.0](/LICENSE)
+[GNU General Public License v3.0](./LICENSE)
