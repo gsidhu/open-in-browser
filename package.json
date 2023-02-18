@@ -1,9 +1,9 @@
 {
   "name": "open-in-browser",
   "displayName": "Open in Browser",
-  "description": "Opens the current repository's remote URL in Browser",
-  "version": "0.0.1",
-  "repository": "https://github.com/gsidhu/vscode-ext-open-in-browser",
+  "description": "Opens the current Git repository's remote URL in a browser",
+  "version": "1.0.0",
+  "repository": "https://github.com/gsidhu/open-in-browser",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -15,8 +15,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "open-in-browser.openRemoteURLInBrowser",
-        "title": "Open Remote URL in Browser"
+        "command": "open-in-browser.openRemoteFetchURLInBrowser",
+        "title": "Open Remote Fetch URL in Browser"
+      },
+      {
+        "command": "open-in-browser.openRemotePushURLInBrowser",
+        "title": "Open Remote Push URL in Browser"
       }
     ]
   },
