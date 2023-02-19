@@ -31,6 +31,7 @@ Selecting a browser will open the remote URL in the selected browser.
 
 ## CHANGELOG
 1. [1.0.0](https://github.com/gsidhu/open-in-browser/releases/tag/v1.0.0) - Initial release
+2. [1.0.1](https://github.com/gsidhu/open-in-browser/releases/tag/v1.0.1) - Add graceful error handling
 
 ## ROADMAP & CONTRIBUTING
 To me, this extension is already feature-complete. 

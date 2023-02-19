@@ -10,7 +10,11 @@ function activate(context) {
 	let disposableQuick = vscode.commands.registerCommand('open-in-browser.openOriginRemoteFetchURLInBrowser', function () {
 		// get fetch URL for the origin remote
 		getFetchURL('origin').then((url) => {
-			showBrowserOptions(url);
+			if (url) {
+				showBrowserOptions(url);
+			} else {
+				noRemotesMessage();
+			}
 		});
 	});
 
@@ -19,12 +23,17 @@ function activate(context) {
 		// get all remotes for the current repository
 		getAllRemotes().then((result) => {
 			let remoteNames = result.trim().split('\n');
-			vscode.window.showQuickPick(remoteNames).then((remote) => {
-				// get fetch URL for the chosen remote
-				getFetchURL(remote).then((url) => {
-					showBrowserOptions(url);
+			if (remoteNames.length === 0) {
+				noRemotesMessage();
+				return;
+			} else {
+				vscode.window.showQuickPick(remoteNames).then((remote) => {
+					// get fetch URL for the chosen remote
+					getFetchURL(remote).then((url) => {
+						showBrowserOptions(url);
+					});
 				});
-			});
+			}
 		});
 	});
 	
@@ -33,12 +42,17 @@ function activate(context) {
 		// get all remotes for the current repository
 		getAllRemotes().then((result) => {
 			let remoteNames = result.trim().split('\n');
-			vscode.window.showQuickPick(remoteNames).then((remote) => {
-				// get fetch URL for the chosen remote
-				getPushURL(remote).then((url) => {
-					showBrowserOptions(url);
+			if (remoteNames.length === 0) {
+				noRemotesMessage();
+				return;
+			} else {
+				vscode.window.showQuickPick(remoteNames).then((remote) => {
+					// get fetch URL for the chosen remote
+					getPushURL(remote).then((url) => {
+						showBrowserOptions(url);
+					});
 				});
-			});
+			}
 		});
 	});
 
@@ -62,28 +76,39 @@ function showBrowserOptions(url) {
 
 async function getAllRemotes() {
 	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
-	const {stdout, stderr} = await exec("cd " + currentPath + " && git remote")
-	return stdout;
+	try {
+		const {stdout, stderr} = await exec("cd " + currentPath + " && git remote")
+		return stdout;
+	} catch (err) {
+		noRemotesMessage();
+		return;
+	}
 }
 
 async function getFetchURL(remote) {
 	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
-	const { stdout, stderr } = await exec("cd " + currentPath + " && git config --get remote." + remote + ".url");
-  if (stderr) {
-		vscode.window.showInformationMessage(stderr.toString());
-		return stderr;
+	try {
+		const { stdout, stderr } = await exec("cd " + currentPath + " && git config --get remote." + remote + ".url");
+		return stdout.trim();
+	} catch (err) {
+		noRemotesMessage();
+		return;
 	}
-	return stdout.trim();
 }
 
 async function getPushURL(remote) {
 	const currentPath = vscode.workspace.workspaceFolders[0].uri.path;
-	const { stdout, stderr } = await exec("cd " + currentPath + " && git remote get-url --push " + remote);
-  if (stderr) {
-		vscode.window.showInformationMessage(stderr.toString());
-		return stderr;
+	try {
+		const { stdout, stderr } = await exec("cd " + currentPath + " && git remote get-url --push " + remote);
+		return stdout.trim();
+	} catch (err) {
+		noRemotesMessage();
+		return;
 	}
-	return stdout.trim();
+}
+
+async function noRemotesMessage() {
+	vscode.window.showInformationMessage("No git repository or remotes found for this repository.");
 }
 
 // This method is called when your extension is deactivated

@@ -2,7 +2,7 @@
   "name": "open-in-browser",
   "displayName": "Open in Browser",
   "description": "Opens the current Git repository's remote URL in a browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "https://github.com/gsidhu/open-in-browser",
   "engines": {
     "vscode": "^1.75.0"
